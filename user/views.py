@@ -48,6 +48,7 @@ def register_faculty(request):
         if user_form.is_valid():
             user=user_form.save(is_faculty=True)
             faculty=Faculty.objects.create(user=user)
+            messages.success(request,'Account Created successfully')
             return redirect(reverse('user:login'))
         else:
             context['user_form']=user_form

@@ -55,15 +55,20 @@ class DepartmentAdmin(admin.ModelAdmin):
         model=Department
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display=['faculty','title','description',]
+    list_display=['faculty','title','description','department']
     fieldsets = [
         (('Basic Information'), {'fields': ('faculty', 'title','description')}),
         (('Tags (Separate tags with comma)'), {'fields': ('tags',)}),
         (('Control Information'),{'fields':('is_department_specific','max_students','start_date','end_date','is_active')}),
     ]
 
+    list_filter=['faculty__user__department__name']
+
     def faculty(self,obj):
         return obj.faculty
+    
+    def department(self,obj):
+        return obj.faculty.user.department.name
 
     class Meta:
         model=Project

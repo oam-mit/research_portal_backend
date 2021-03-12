@@ -10,7 +10,9 @@ from rest_framework.permissions import IsAuthenticated
 from user.serializers import DepartmentSerializer
 from user.models import Department,Project,Application
 
-from .serializers import ProjectSerializer,AppliedProjectSerializer
+from .serializers import ProjectSerializer,AppliedProjectSerializer,ApplicationSerializer
+
+from user.serializers import UserSerializer
 # Create your views here.
 
 @api_view(['GET'])
@@ -34,6 +36,10 @@ def get_projects(request,department_slug):
         return Response(context)
     submitted_applications=Application.objects.filter(student=request.user.student)
     projects=Project.objects.filter(faculty__user__department__slug=department_slug)
+
+    if department_slug!=request.user.department.slug:
+        projects=projects.exclude(is_department_specific=True)
+        
     serializer=ProjectSerializer(projects,many=True,context={'user':request.user})
     context['status']='ok'
     context['projects']=serializer.data
@@ -47,17 +53,17 @@ def get_projects(request,department_slug):
 def submit_application(request):
     context={}
     try:
-        project=Project.objects.get(uuid_field=request.POST.get('project_uuid_field'))
+        project=Project.objects.get(uuid_field=request.data.get('project_uuid_field'))
         application=Application.objects.create(
             project=project,student=request.user.student
         )
         context['status']='successful'
     except ObjectDoesNotExist:
         context['status']='unsuccessful'
-        context['error']='uuid invalid'
+        context['error']='UUID Invalid'
     except IntegrityError:
         context['status']='unuccesful'
-        context['error']='already submitted'
+        context['error']='Already Submitted'
     
     return Response(context)
 
@@ -81,11 +87,26 @@ def update_profile(request):
 @permission_classes([IsAuthenticated])
 def get_applied_projects(request):
     context={}
-    projects=Project.objects.filter(application__student=request.user.student)
-    serializer=AppliedProjectSerializer(projects,many=True)
-
+    applications=Application.objects.filter(student=request.user.student)
+    serializer=ApplicationSerializer(applications,many=True)
     context['projects']=serializer.data
 
     return Response(context)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def submit_cv(request):
+    context={}
+    try:
+        request.user.student.cv=request.FILES.get('cv')
+        request.user.student.save()
+        serializer=UserSerializer(request.user)
+        context['status']='successful'
+        context['user']=serializer.data
+        return Response(context)
+    except Exception as e:
+        context['status']='unsuccessful'
+        context['error']=e.__str__()
+        print(context)
+        return Response(context)
 

@@ -69,6 +69,7 @@ class Student(models.Model):
 
 class Faculty(models.Model):
     user=models.OneToOneField(to=User,on_delete=models.CASCADE)
+    #add designation
     profile_picture=models.ImageField(upload_to='faculty/pics',blank=True,null=True)
 
     def __str__(self):
@@ -94,9 +95,12 @@ class Project(models.Model):
     id=models.BigAutoField(primary_key=True)
     uuid_field=models.UUIDField(unique=True,default=uuid4,editable=False)
     faculty=models.ForeignKey(to=Faculty,on_delete=models.CASCADE)
+    #page 1
     title=models.CharField(max_length=6000)
     description=models.TextField(max_length=65000)
     tags=models.CharField(max_length=65000)
+    
+    #page2
     is_department_specific=models.BooleanField()
     max_students=models.PositiveBigIntegerField()
     start_date=models.DateField()
@@ -106,11 +110,17 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+STATUS_CHOICES=[
+    ('applied','applied'),
+    ('rejected','rejected'),
+    ('accepted','accepted')
+]
 
 class Application(models.Model):
     project=models.ForeignKey(to=Project,on_delete=models.CASCADE)
     student=models.ForeignKey(to=Student,on_delete=models.CASCADE)
     time_of_submission=models.DateTimeField(auto_now_add=True)
+    status=models.CharField(choices=STATUS_CHOICES,max_length=100,default='applied')
 
     def __str__(self):
         return self.student.user.email+" "+self.project.title

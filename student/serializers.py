@@ -25,3 +25,16 @@ class AppliedProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model=Project
         fields=['uuid_field','title','start_date','end_date','faculty','department_slug']
+    
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    uuid_field=serializers.CharField(source='project.uuid_field')
+    title=serializers.CharField(source='project.title')
+    start_date=serializers.DateField(source='project.start_date')
+    end_date=serializers.DateField(source='project.end_date')
+    faculty=UserSerializer(many=False,read_only=True,source='project.faculty.user')
+    department_slug=serializers.CharField(source='project.faculty.user.department.slug')
+
+    class Meta:
+        model=Application
+        fields=['uuid_field','title','start_date','end_date','faculty','department_slug','status']
