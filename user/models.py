@@ -1,4 +1,6 @@
 import re
+import os
+
 from uuid import uuid4
 
 from django.db import models
@@ -20,9 +22,9 @@ from .managers import CustomUserManager
 
 
 def email_validator(email):
-    if not email.endswith('@learner.manipal.edu'):
+    if not email.endswith('.manipal.edu'):
         raise ValidationError(
-        ('Please enter your Learner Id (@learner.manipal.edu)')
+        ('Please enter your valid Manipal Email Id (ends with manipal.edu)')
 )
 
 
@@ -56,21 +58,37 @@ class User(AbstractUser):
     class Meta:
         unique_together=['first_name','last_name']
         
-    
+
+def upload_and_rename_cv(instance,filename):
+    upload_to='student/CVs'
+    extension=filename.split('.')[-1]
+
+    (first_name,last_name,registration_number)=(instance.user.first_name,instance.user.last_name,instance.registration_number)
+
+    return os.path.join(upload_to,f'{registration_number}_{first_name}_{last_name}.{extension}')
 
 class Student(models.Model):
     user=models.OneToOneField(to=User,on_delete=models.CASCADE)
     registration_number=models.CharField(max_length=10,validators=[])
-    cv=models.FileField(upload_to='student/CVs',null=True,blank=True)
+    cv=models.FileField(upload_to=upload_and_rename_cv,null=True,blank=True)
 
     def __str__(self):
         return self.user.email
 
 
+def upload_and_rename_pic(instance,filename):
+    upload_to='faculty/pics'
+    extension=filename.split('.')[-1]
+
+    (first_name,last_name)=(instance.user.first_name,instance.user.last_name)
+
+    return os.path.join(upload_to,f'{first_name}_{last_name}.{extension}')
+
+
 class Faculty(models.Model):
     user=models.OneToOneField(to=User,on_delete=models.CASCADE)
     #add designation
-    profile_picture=models.ImageField(upload_to='faculty/pics',blank=True,null=True)
+    profile_picture=models.ImageField(upload_to=upload_and_rename_pic,blank=True,null=True)
 
     def __str__(self):
         return self.user.email
@@ -110,11 +128,18 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+
+APPPLIED='applied'
+REJECTED='rejected'
+ACCEPTED='accepted'
+
 STATUS_CHOICES=[
-    ('applied','applied'),
-    ('rejected','rejected'),
-    ('accepted','accepted')
+    (APPPLIED,APPPLIED[0].upper()+APPPLIED[1:]),
+    (REJECTED,REJECTED[0].upper()+REJECTED[1:]),
+    (ACCEPTED,ACCEPTED[0].upper()+ACCEPTED[1:]),
 ]
+
+
 
 class Application(models.Model):
     project=models.ForeignKey(to=Project,on_delete=models.CASCADE)

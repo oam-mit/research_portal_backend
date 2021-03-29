@@ -20,9 +20,10 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('verification/', include('verify_email.urls')),	
     path('',include('user.urls')),
     path('student/',include('student.urls')),
-    path('faculty/',include('faculty.urls'))
+    path('faculty/',include('faculty.urls')),
 ]
 
 if settings.DEBUG:

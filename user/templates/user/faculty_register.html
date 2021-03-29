@@ -1,130 +1,142 @@
-{%load static%}
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1.0">
+{%extends 'user/registration_base.html'%}
 
-    <link rel="stylesheet" href="{%static 'user/style2.css'%}">
+{%block type%}
+Faculty
+{%endblock%}
 
-    <link href="https://fonts.googleapis.com/css?family=Karla:400,700&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <title>Signup</title>
-    <link rel="icon" href="{%static 'user/logo.png'%}" type="image/x-icon" />
-  </head>
-  <body>
-    <div class="wrappper">
+{%block title%}
+Faculty | Register
+{%endblock%}
 
-      <div class="box">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
-
-        <div class="container ">
-          <div class="row">
-
-            <div class="col-lg-6  col-sm-12 form-secion" id="form-block" style="margin-top: 10%;">
-              <div class="login-wrapper">
-                <h2 class="login-title">Sign up</h2>
-
-                <form method="POST">
-                    {%csrf_token%}
-                    <div class="form-group">
-                        {{user_form.email}}
-                        {%if user_form.email.errors%}
-                          <div class="invalid-feedback">
-                            {{user_form.email.errors}}
-                          </div>
-                        {%endif%}
+{%block errors%}
+    {%if user_form.non_field_errors%}
+                <ul class='form-errors'>
+                    {% for error in user_form.non_field_errors %}
+                    <div class="alert alert-warning text-center" role="alert">
+                            {{error}}
                     </div>
-                    <div class="form-group">
-                        {{user_form.first_name}}
-                        {%if user_form.first_name.errors%}
-                          <div class="invalid-feedback">
-                            {{user_form.first_name.errors}}
-                          </div>
-                        {%endif%}
-                    </div>
-                    <div class="form-group">
-                        {{user_form.last_name}}
-                        {%if user_form.last_name.errors%}
-                          <div class="invalid-feedback">
-                            {{user_form.last_name.errors}}
-                          </div>
-                        {%endif%}
-                    </div>
-                    <div class="form-group">
-                        {{user_form.department}}
-                    </div>
-                    <div class="form-group">
-                      {{user_form.password1}}
-                      {%if user_form.password1.errors%}
-                          <div class="invalid-feedback">
-                            {{user_form.password1.errors}}
-                          </div>
-                        {%endif%}
-                    </div>
-                    <div class="form-group">
-                      {{user_form.password2}}
-                      {%if user_form.password2.errors%}
-                          <div class="invalid-feedback">
-                            {{user_form.password2.errors}}
-                          </div>
-                        {%endif%}
-                    </div>
+                    {% endfor %}
+                </ul>
+    {%endif%}
+{%endblock%}
 
+{%block form%}
+<form method="POST" class="custom-margin">
+    {%csrf_token%}
+    <div class="row">
 
-                    <div class="d-flex ">
-                      <button name="login" id="login" class="btn login-btn" type="submit" value="Submit">Submit</button>
-                    </div>
-
-                  </form>
-              </div>
+        <!-- First Name -->
+        <div class="input-group col-lg-6 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fa fa-user text-muted"></i>
+                </span>
             </div>
-
-            <div class="col-6 intro-section d-none d-lg-block">
-                <div class="intro-content-wrapper" id="text-block"style="margin-top:22%;">
-                  <div class="brand-wrapper">
-                    <img src="{%static 'user/logo.png'%}" alt="logo" class="logo">
-                  </div>
-                  <div class="side-text" >
-                    <h1 class="intro-title">Welcome to the Research Portal!</h1>
-                  <p class="intro-text d-none d-lg-block">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                    labore et dolore magna aliqua</p>
-                  </div>
-
-                </div>
-              </div>
-          </div>
+            {{user_form.first_name}}
+            {%if user_form.first_name.errors%}
+            <div class="invalid-feedback">
+                {{user_form.first_name.errors}}
+            </div>
+            {%endif%}
         </div>
-      </main>
-  
+
+        <!-- Last Name -->
+        <div class="input-group col-lg-6 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fa fa-user text-muted"></i>
+                </span>
+            </div>
+            {{user_form.last_name}}
+            {%if user_form.last_name.errors%}
+            <div class="invalid-feedback">
+                {{user_form.last_name.errors}}
+            </div>
+            {%endif%}
+        </div>
+
+        <!-- Email Address -->
+        <div class="input-group col-lg-12 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fa fa-envelope text-muted"></i>
+                </span>
+            </div>
+            {{user_form.email}}
+            {%if user_form.email.errors%}
+            <div class="invalid-feedback">
+                {{user_form.email.errors}}
+            </div>
+            {%endif%}
+        </div>
+
+        <!-- Department -->
+        <div class="input-group col-lg-12 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fas fa-building text-muted"></i>
+                </span>
+            </div>
+            {{user_form.department}}
+        </div>
 
 
+        <!-- Password -->
+        <div class="input-group col-lg-12 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fa fa-lock text-muted"></i>
+                </span>
+            </div>
+            {{user_form.password1}}
+            {%if user_form.password1.errors%}
+                <div class="invalid-feedback">
+                    {{user_form.password1.errors}}
+                </div>
+            {%endif%}
+        </div>
 
 
+        <!-- Password Confirmation -->
+        <div class="input-group col-lg-12 mb-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text bg-white px-4 border-md border-right-0">
+                    <i class="fa fa-lock text-muted"></i>
+                </span>
+            </div>
+            {{user_form.password2}}
+            {%if user_form.password2.errors%}
+                <div class="invalid-feedback">
+                    {{user_form.password2.errors}}
+                </div>
+            {%endif%}
+        </div>
 
-  </body>
+
+        <!-- Submit Button -->
+        <div class="form-group col-lg-12 mx-auto mb-0">
+            <button type="submit" class="btn btn-primary btn-block py-2">
+                <span class="font-weight-bold">Create your account</span>
+            </button>
+        </div>
 
 
+        <!-- Divider Text -->
+        <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
+            <div class="border-bottom w-100 ml-5"></div>
+            <span class="px-2 small font-weight-bold text-mute">OR</span>
+            <div class="border-bottom w-100 mr-5"></div>
+        </div>
 
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 
-  </script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  <script src="https://i437245.0yrvtrh.com/sec/pjs/PHBkcg%3D%3D"></script>
-</html>
+        <!-- Already Registered -->
+        <div class="text-center w-100">
+            <p class="text-mute font-weight-bold">Are you a Student <a href="{%url 'user:student_register'%}" class="text-white ml-2">Click here</a></p>
+        </div>
+        <div class="text-center w-100">
+            <p class="text-mute font-weight-bold">Already Registered? <a href="{%url 'user:login'%}" class="text-white ml-2">Login</a></p>
+        </div>
+
+    </div>
+</form>
+{%endblock%}

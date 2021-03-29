@@ -37,10 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
     'rest_framework',
+    'verify_email',
     'user.apps.UserConfig',
     'student.apps.StudentConfig',
+    'student.student_api',
     'faculty.apps.FacultyConfig',
+    'faculty.faculty_api',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +62,7 @@ ROOT_URLCONF = 'research_portal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'build'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +129,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[BASE_DIR / 'static']
+STATICFILES_DIRS=[
+    BASE_DIR / 'static',
+    BASE_DIR/'build',
+    BASE_DIR/'build/static'
+]
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=BASE_DIR/'media'
+
+# def make_user_active(user):
+#     user.is_active=True
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR /'emails'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'istemanipalboard@gmail.com'
+EMAIL_HOST_PASSWORD ='tngiynqwsbeopaub'
+DEFAULT_FROM_EMAIL = 'ISTE Manipal Research Portal <istemanipalboard@gmail.com>'
+
+# EMAIL_VERIFIED_CALLBACK = make_user_active
+# EMAIL_FROM_ADDRESS = EMAIL_HOST_USER
+# EMAIL_MAIL_SUBJECT = 'Confirm your email'
+# EMAIL_TOKEN_LIFE = 60 * 60
+# EMAIL_PAGE_TEMPLATE = 'user/login.html'
+# EMAIL_PAGE_DOMAIN = 'http://127.0.0.1:8000/'
