@@ -12,6 +12,7 @@ from user.models import Department, Project, Application
 from user.permissions import IsStudent
 
 from ..serializers import ProjectSerializer, AppliedProjectSerializer, ApplicationSerializer
+from ..utils import send_application_successful_email, check_and_send_professor_email
 
 from user.serializers import UserSerializer
 from .exceptions import ProjectNotActive
@@ -59,14 +60,19 @@ def get_projects(request, department_slug):
 @permission_classes([IsAuthenticated, IsStudent])
 def submit_application(request):
     context = {}
+
     try:
         project = Project.objects.get(
             uuid_field=request.data.get('project_uuid_field'))
+
         if project.is_active:
             application = Application.objects.create(
                 project=project, student=request.user.student
             )
             context['status'] = 'successful'
+            send_application_successful_email(request, request.user, project)
+            #check_and_send_professor_email(request, project)
+
         else:
             raise ProjectNotActive
     except ObjectDoesNotExist:
