@@ -1,9 +1,9 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import get_template, render_to_string
-from research_portal import settings
-from user.models import User, Project, Application, ACCEPTED, REJECTED
 from django.utils.html import strip_tags
-from django.contrib.sites.shortcuts import get_current_site
+from research_portal import settings
+from user.models import ACCEPTED, REJECTED, Application, Project, User
 
 
 def send_application_status_change_email(request, application: Application):
@@ -28,7 +28,7 @@ def _send_acceptance_email(request, application: Application):
     from_email = settings.EMAIL_HOST_USER
     to = application.student.user.email
 
-    send_mail('Application Submitted Successfully', plain_message,
+    send_mail('Acceptance of Application', plain_message,
               from_email, [to], html_message=html_message)
 
 
@@ -47,5 +47,5 @@ def _send_rejection_email(request, application: Application):
     from_email = settings.EMAIL_HOST_USER
     to = application.student.user.email
 
-    send_mail('Application Submitted Successfully', plain_message,
+    send_mail('Application Update', plain_message,
               from_email, [to], html_message=html_message)
