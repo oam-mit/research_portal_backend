@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from user.decorators import faculty_required
 
 
-def home(request):
-    return render(request,'index.html')
-    
+@faculty_required
+def home(request, *args, **kwargs):
+    return render(request, 'index.html')
