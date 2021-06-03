@@ -14,6 +14,8 @@ from user.permissions import IsFaculty
 
 from student.serializers import AppliedProjectSerializer
 
+from ..utils import send_application_status_change_email
+
 
 from user.models import ACCEPTED, REJECTED, APPPLIED
 
@@ -149,6 +151,8 @@ def application_change_status(request):
         application.save()
 
         context['status'] = 'successful'
+
+        send_application_status_change_email(request, application)
 
     except:
         context['status'] = 'unsuccessful'
