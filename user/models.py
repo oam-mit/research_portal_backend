@@ -83,9 +83,19 @@ def upload_and_rename_pic(instance, filename):
     return os.path.join(upload_to, f'{first_name}_{last_name}.{extension}')
 
 
+DESIGNATION_CHOICES = [
+    ('Mr', 'Mr'),
+    ('Ms', 'Ms'),
+    ('Mrs', 'Mrs'),
+    ('Dr', 'Dr'),
+]
+
+
 class Faculty(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     # add designation
+    designation = models.CharField(
+        default='Mr', choices=DESIGNATION_CHOICES, max_length=10)
     profile_picture = models.ImageField(
         upload_to=upload_and_rename_pic, blank=True, null=True)
 

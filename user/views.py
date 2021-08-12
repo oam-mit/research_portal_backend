@@ -13,7 +13,7 @@ from rest_framework.decorators import permission_classes
 
 # My Packages
 from .models import Student, Faculty
-from .forms import CustomUserCreationForm, StudentCreationForm, CustomAuthenticationForm
+from .forms import CustomUserCreationForm, StudentCreationForm, CustomAuthenticationForm, FacultyRegistrationForm
 from .serializers import UserSerializer
 from research_portal.settings import LOGIN_REDIRECT_URL
 
@@ -90,21 +90,26 @@ def register_faculty(request):
 
     if request.method == 'POST':
         user_form = CustomUserCreationForm(request.POST)
-        if user_form.is_valid():
+        faculty_form = FacultyRegistrationForm(request.POST)
+        if user_form.is_valid() and faculty_form.is_valid():
             user = send_verification_email(request, True, user_form)
-            faculty = Faculty.objects.create(user=user)
+            faculty = Faculty.objects.create(
+                user=user, designation=faculty_form.cleaned_data.get('designation'))
             messages.success(
                 request, 'Account Created successfully. Please check your inbox for the confirmation email. Failure to confirm your email id would result in failure to log in to your account')
             return redirect(reverse('user:login'))
         else:
             context['user_form'] = user_form
+            context['faculty_form'] = faculty_form
             messages.error(request, 'Please check your inputs',
                            extra_tags='danger')
             return render(request, 'user/faculty_register.html', context=context)
 
     user_form = CustomUserCreationForm()
+    faculty_form = FacultyRegistrationForm()
 
     context['user_form'] = user_form
+    context['faculty_form'] = faculty_form
 
     return render(request, 'user/faculty_register.html', context=context)
 

@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/omkar/Desktop/Web Development/Research Portal/backend/env/bin/python3.6"
+    "python.pythonPath": "/home/omkar/Desktop/Web Development/Research Portal/backend/env/bin/python3.6",
+    "prettier.enable": false,
 }

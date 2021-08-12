@@ -1,142 +1,152 @@
-{%extends 'user/registration_base.html'%}
+{%extends 'user/registration_base.html'%} 
+{%block type%} Faculty {%endblock%}
 
-{%block type%}
-Faculty
-{%endblock%}
+{%block title%} Faculty | Register {%endblock%} 
 
-{%block title%}
-Faculty | Register
-{%endblock%}
+{%block errors%} 
 
-{%block errors%}
-    {%if user_form.non_field_errors%}
-                <ul class='form-errors'>
-                    {% for error in user_form.non_field_errors %}
-                    <div class="alert alert-warning text-center" role="alert">
-                            {{error}}
-                    </div>
-                    {% endfor %}
-                </ul>
-    {%endif%}
-{%endblock%}
+{%if user_form.non_field_errors%}
+<ul class="form-errors">
+	{% for error in user_form.non_field_errors %}
+	<div class="alert alert-warning text-center" role="alert">{{error}}</div>
+	{% endfor %}
+</ul>
+{%endif%} 
+
+{%if faculty_form.non_field_errors%}
+<ul class="form-errors">
+	{% for error in faculty_form.non_field_errors %}
+	<div class="alert alert-warning text-center" role="alert">{{error}}</div>
+	{% endfor %}
+</ul>
+{%endif%} 
+
+{%endblock%} 
 
 {%block form%}
 <form method="POST" class="custom-margin">
-    {%csrf_token%}
-    <div class="row">
+	{%csrf_token%}
+	<div class="row">
+		<div class="input-group col-lg-6 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-user text-muted"></i>
+				</span>
+			</div>
+			{{faculty_form.designation}} {%if faculty_form.designation_name.errors%}
+			<div class="invalid-feedback">
+				{{faculty_form.designation_name.errors}}
+			</div>
+			{%endif%}
+		</div>
 
-        <!-- First Name -->
-        <div class="input-group col-lg-6 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-user text-muted"></i>
-                </span>
-            </div>
-            {{user_form.first_name}}
-            {%if user_form.first_name.errors%}
-            <div class="invalid-feedback">
-                {{user_form.first_name.errors}}
-            </div>
-            {%endif%}
-        </div>
+		<!-- First Name -->
+		<div class="input-group col-lg-6 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-user text-muted"></i>
+				</span>
+			</div>
+			{{user_form.first_name}} 
+			{%if user_form.first_name.errors%}
+			<div class="invalid-feedback">{{user_form.first_name.errors}}</div>
+			{%endif%}
+		</div>
 
-        <!-- Last Name -->
-        <div class="input-group col-lg-6 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-user text-muted"></i>
-                </span>
-            </div>
-            {{user_form.last_name}}
-            {%if user_form.last_name.errors%}
-            <div class="invalid-feedback">
-                {{user_form.last_name.errors}}
-            </div>
-            {%endif%}
-        </div>
+		<!-- Last Name -->
+		<div class="input-group col-lg-6 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-user text-muted"></i>
+				</span>
+			</div>
+			{{user_form.last_name}} 
+			
+			{%if user_form.last_name.errors%}
+			<div class="invalid-feedback">{{user_form.last_name.errors}}</div>
+			{%endif%}
+		</div>
 
-        <!-- Email Address -->
-        <div class="input-group col-lg-12 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-envelope text-muted"></i>
-                </span>
-            </div>
-            {{user_form.email}}
-            {%if user_form.email.errors%}
-            <div class="invalid-feedback">
-                {{user_form.email.errors}}
-            </div>
-            {%endif%}
-        </div>
+		<!-- Email Address -->
+		<div class="input-group col-lg-12 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-envelope text-muted"></i>
+				</span>
+			</div>
+			{{user_form.email}} 
+			{%if user_form.email.errors%}
+			<div class="invalid-feedback">{{user_form.email.errors}}</div>
+			{%endif%}
+		</div>
 
-        <!-- Department -->
-        <div class="input-group col-lg-12 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fas fa-building text-muted"></i>
-                </span>
-            </div>
-            {{user_form.department}}
-        </div>
+		<!-- Department -->
+		<div class="input-group col-lg-12 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fas fa-building text-muted"></i>
+				</span>
+			</div>
+			{{user_form.department}}
+		</div>
 
+		<!-- Password -->
+		<div class="input-group col-lg-12 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-lock text-muted"></i>
+				</span>
+			</div>
+			{{user_form.password1}} 
+			
+			{%if user_form.password1.errors%}
+			<div class="invalid-feedback">{{user_form.password1.errors}}</div>
+			{%endif%}
+		</div>
 
-        <!-- Password -->
-        <div class="input-group col-lg-12 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-lock text-muted"></i>
-                </span>
-            </div>
-            {{user_form.password1}}
-            {%if user_form.password1.errors%}
-                <div class="invalid-feedback">
-                    {{user_form.password1.errors}}
-                </div>
-            {%endif%}
-        </div>
+		<!-- Password Confirmation -->
+		<div class="input-group col-lg-12 mb-4">
+			<div class="input-group-prepend">
+				<span class="input-group-text bg-white px-4 border-md border-right-0">
+					<i class="fa fa-lock text-muted"></i>
+				</span>
+			</div>
+			{{user_form.password2}} 
+			
+			{%if user_form.password2.errors%}
+			<div class="invalid-feedback">{{user_form.password2.errors}}</div>
+			{%endif%}
+		</div>
 
+		<!-- Submit Button -->
+		<div class="form-group col-lg-12 mx-auto mb-0">
+			<button type="submit" class="btn btn-primary btn-block py-2">
+				<span class="font-weight-bold">Create your account</span>
+			</button>
+		</div>
 
-        <!-- Password Confirmation -->
-        <div class="input-group col-lg-12 mb-4">
-            <div class="input-group-prepend">
-                <span class="input-group-text bg-white px-4 border-md border-right-0">
-                    <i class="fa fa-lock text-muted"></i>
-                </span>
-            </div>
-            {{user_form.password2}}
-            {%if user_form.password2.errors%}
-                <div class="invalid-feedback">
-                    {{user_form.password2.errors}}
-                </div>
-            {%endif%}
-        </div>
+		<!-- Divider Text -->
+		<div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
+			<div class="border-bottom w-100 ml-5"></div>
+			<span class="px-2 small font-weight-bold text-mute">OR</span>
+			<div class="border-bottom w-100 mr-5"></div>
+		</div>
 
-
-        <!-- Submit Button -->
-        <div class="form-group col-lg-12 mx-auto mb-0">
-            <button type="submit" class="btn btn-primary btn-block py-2">
-                <span class="font-weight-bold">Create your account</span>
-            </button>
-        </div>
-
-
-        <!-- Divider Text -->
-        <div class="form-group col-lg-12 mx-auto d-flex align-items-center my-4">
-            <div class="border-bottom w-100 ml-5"></div>
-            <span class="px-2 small font-weight-bold text-mute">OR</span>
-            <div class="border-bottom w-100 mr-5"></div>
-        </div>
-
-
-        <!-- Already Registered -->
-        <div class="text-center w-100">
-            <p class="text-mute font-weight-bold">Are you a Student <a href="{%url 'user:student_register'%}" class="text-white ml-2">Click here</a></p>
-        </div>
-        <div class="text-center w-100">
-            <p class="text-mute font-weight-bold">Already Registered? <a href="{%url 'user:login'%}" class="text-white ml-2">Login</a></p>
-        </div>
-
-    </div>
+		<!-- Already Registered -->
+		<div class="text-center w-100">
+			<p class="text-mute font-weight-bold">
+				Are you a Student
+				<a href="{%url 'user:student_register'%}" class="text-white ml-2"
+					>Click here</a
+				>
+			</p>
+		</div>
+		<div class="text-center w-100">
+			<p class="text-mute font-weight-bold">
+				Already Registered?
+				<a href="{%url 'user:login'%}" class="text-white ml-2">Login</a>
+			</p>
+		</div>
+	</div>
 </form>
 {%endblock%}
