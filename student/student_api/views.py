@@ -12,7 +12,7 @@ from user.models import Department, Project, Application
 from user.permissions import IsStudent
 
 from ..serializers import ProjectSerializer, AppliedProjectSerializer, ApplicationSerializer
-from ..utils import send_application_successful_email, check_and_send_professor_email
+from ..utils import StudentEmail
 
 from user.serializers import UserSerializer
 from .exceptions import ProjectNotActive
@@ -70,8 +70,10 @@ def submit_application(request):
                 project=project, student=request.user.student
             )
             context['status'] = 'successful'
-            send_application_successful_email(request, request.user, project)
-            #check_and_send_professor_email(request, project)
+            studentemail = StudentEmail()
+            studentemail.send_application_successful_email(
+                request, request.user, project)
+            #studentemail.check_and_send_professor_email(request, project)
 
         else:
             raise ProjectNotActive

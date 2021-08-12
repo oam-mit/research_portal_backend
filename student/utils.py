@@ -10,41 +10,80 @@ from django.contrib.auth.views import PasswordResetView
 _NEW_APPLICATIONS_NUMBER = 2
 
 
-def send_application_successful_email(request, user: User, project: Project):
+class StudentEmail():
 
-    context = {
-        'user': user,
-        'project': project,
-        'domain': get_current_site(request)
-    }
+    def send_application_successful_email(self, request, user: User, project: Project):
+        context = {
+            'user': user,
+            'project': project,
+            'domain': get_current_site(request)
+        }
 
-    html_message = render_to_string(
-        'student/emails/project_application.html', context)
-    plain_message = strip_tags(html_message)
-    from_email = settings.EMAIL_HOST_USER
-    to = user.email
+        html_message = render_to_string(
+            'student/emails/project_application.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        to = user.email
 
-    send_mail('Application Submitted Successfully', plain_message,
-              from_email, [to], html_message=html_message)
+        send_mail('Application Submitted Successfully', plain_message,
+                  from_email, [to], html_message=html_message)
+
+    def __send_email_to_professor(self, request, project: Project):
+        context = {
+            'faculty': project.faculty,
+            'number': _NEW_APPLICATIONS_NUMBER,
+            'domain': get_current_site(request)
+        }
+
+        html_message = render_to_string(
+            'student/emails/project_application.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        to = project.faculty.user.email
+
+        send_mail('Application Submitted Successfully', plain_message,
+                  from_email, [to], html_message=html_message)
+
+    def check_and_send_professor_email(self, request, project: Project):
+        if project.application_set.count() % _NEW_APPLICATIONS_NUMBER == 0:
+            self.__send_email_to_professor(request, project)
 
 
-def _send_email_to_professor(request, project: Project):
-    context = {
-        'faculty': project.faculty,
-        'number': _NEW_APPLICATIONS_NUMBER,
-        'domain': get_current_site(request)
-    }
+# def send_application_successful_email(request, user: User, project: Project):
 
-    html_message = render_to_string(
-        'student/emails/project_application.html', context)
-    plain_message = strip_tags(html_message)
-    from_email = settings.EMAIL_HOST_USER
-    to = project.faculty.user.email
+#     context = {
+#         'user': user,
+#         'project': project,
+#         'domain': get_current_site(request)
+#     }
 
-    send_mail('Application Submitted Successfully', plain_message,
-              from_email, [to], html_message=html_message)
+#     html_message = render_to_string(
+#         'student/emails/project_application.html', context)
+#     plain_message = strip_tags(html_message)
+#     from_email = settings.EMAIL_HOST_USER
+#     to = user.email
+
+#     send_mail('Application Submitted Successfully', plain_message,
+#               from_email, [to], html_message=html_message)
 
 
-def check_and_send_professor_email(request, project: Project):
-    if project.application_set.count() % _NEW_APPLICATIONS_NUMBER == 0:
-        _send_email_to_professor(request, project)
+# def _send_email_to_professor(request, project: Project):
+#     context = {
+#         'faculty': project.faculty,
+#         'number': _NEW_APPLICATIONS_NUMBER,
+#         'domain': get_current_site(request)
+#     }
+
+#     html_message = render_to_string(
+#         'student/emails/project_application.html', context)
+#     plain_message = strip_tags(html_message)
+#     from_email = settings.EMAIL_HOST_USER
+#     to = project.faculty.user.email
+
+#     send_mail('Application Submitted Successfully', plain_message,
+#               from_email, [to], html_message=html_message)
+
+
+# def check_and_send_professor_email(request, project: Project):
+#     if project.application_set.count() % _NEW_APPLICATIONS_NUMBER == 0:
+#         _send_email_to_professor(request, project)
