@@ -22,7 +22,7 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label=("Email (Will be used to login and send emails)"),
         widget=forms.EmailInput(attrs={'class': 'form-control bg-white border-left-0 border-md',
-                                'autofocus': False, 'placeholder': 'Enter your Learner Id'}),
+                                'autofocus': False, 'placeholder': 'Enter your Manipal Email Id'}),
     )
     password1 = forms.CharField(
         label=("Password"),
@@ -87,7 +87,7 @@ class FacultyRegistrationForm(forms.ModelForm):
     designation = forms.ChoiceField(
         choices=DESIGNATION_CHOICES,
         widget=forms.Select(attrs={
-            'class': 'form-control bg-white border-left-0 border-md'})
+            'class': 'form-control bg-white border-left-0 border-md', })
     )
 
     class Meta:

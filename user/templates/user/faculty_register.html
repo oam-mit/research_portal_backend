@@ -27,13 +27,10 @@
 <form method="POST" class="custom-margin">
 	{%csrf_token%}
 	<div class="row">
-		<div class="input-group col-lg-6 mb-4">
-			<div class="input-group-prepend">
-				<span class="input-group-text bg-white px-4 border-md border-right-0">
-					<i class="fa fa-user text-muted"></i>
-				</span>
-			</div>
-			{{faculty_form.designation}} {%if faculty_form.designation_name.errors%}
+		<div class="input-group col-lg-12 mb-4">
+			
+			{{faculty_form.designation}} 
+			{%if faculty_form.designation_name.errors%}
 			<div class="invalid-feedback">
 				{{faculty_form.designation_name.errors}}
 			</div>
@@ -41,7 +38,7 @@
 		</div>
 
 		<!-- First Name -->
-		<div class="input-group col-lg-6 mb-4">
+		<div class="input-group col-lg-12 mb-4">
 			<div class="input-group-prepend">
 				<span class="input-group-text bg-white px-4 border-md border-right-0">
 					<i class="fa fa-user text-muted"></i>
@@ -54,7 +51,7 @@
 		</div>
 
 		<!-- Last Name -->
-		<div class="input-group col-lg-6 mb-4">
+		<div class="input-group col-lg-12 mb-4">
 			<div class="input-group-prepend">
 				<span class="input-group-text bg-white px-4 border-md border-right-0">
 					<i class="fa fa-user text-muted"></i>
