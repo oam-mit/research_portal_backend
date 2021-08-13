@@ -60,7 +60,7 @@ def register_student(request):
 
             if user_form.cleaned_data.get('email').endswith('@manipal.edu'):
                 messages.error(
-                    request, 'Please enter your learner id (ends with @learner.manipal.edu')
+                    request, 'Please enter your learner id (ends with @learner.manipal.edu)')
                 context['user_form'] = user_form
                 context['student_form'] = student_form
                 return render(request, 'user/student_register.html', context=context)
@@ -101,7 +101,7 @@ def register_faculty(request):
         if user_form.is_valid() and faculty_form.is_valid():
             if user_form.cleaned_data.get('email').endswith('@learner.manipal.edu'):
                 messages.error(
-                    request, 'Please enter your learner id (ends with @manipal.edu)')
+                    request, 'Please enter your manipal id (ends with @manipal.edu)')
                 context['user_form'] = user_form
                 context['student_form'] = faculty_form
                 return render(request, 'user/faculty_register.html', context=context)

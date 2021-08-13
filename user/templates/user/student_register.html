@@ -27,6 +27,15 @@ Student | Register
                     {% endfor %}
                 </ul>
     {%endif%}
+
+    {%if messages%}
+    <ul class="form-errors">
+        {% for message in messages %}
+        <div class="alert alert-warning text-center" role="alert">{{message}}</div>
+        {% endfor %}
+    </ul>
+    {%endif%} 
+    
 {%endblock%}
 
 {%block form%}
