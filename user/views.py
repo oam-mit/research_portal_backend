@@ -100,6 +100,8 @@ def register_faculty(request):
         faculty_form = FacultyRegistrationForm(request.POST)
         if user_form.is_valid() and faculty_form.is_valid():
             if user_form.cleaned_data.get('email').endswith('@learner.manipal.edu'):
+                messages.error(
+                    request, 'Please enter your learner id (ends with @manipal.edu)')
                 context['user_form'] = user_form
                 context['student_form'] = faculty_form
                 return render(request, 'user/faculty_register.html', context=context)
