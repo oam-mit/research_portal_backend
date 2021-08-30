@@ -22,5 +22,9 @@ urlpatterns = [
          name="api_application_change_status"),
 
     path('change_project_status/', views.change_project_status,
-         name="chane_project_status")
+         name="change_project_status"),
+    path('check_feedback_submitted/<uuid:project_uuid>/<str:email>',
+         views.check_feedback_submitted, name="check_feedback_submitted"),
+
+    path('submit_feedback', views.submit_feedback, name="submit_feedback"),
 ]

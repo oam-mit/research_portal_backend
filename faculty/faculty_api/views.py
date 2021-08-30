@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -8,8 +9,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from user.models import Project, Application
-from user.serializers import UserSerializer
+from user.models import Project, Application, Feedback
+from user.serializers import FeedbackSerializer, UserSerializer
 from user.permissions import IsFaculty
 
 from student.serializers import AppliedProjectSerializer
@@ -104,11 +105,15 @@ def submit_project(request):
             faculty=request.user.faculty,
             title=request.data.get('title'),
             description=request.data.get('description'),
+            outcome=request.data.get('outcome'),
             tags=request.data.get('tags'),
             is_department_specific=request.data.get('is_department_specific'),
+            is_extendable=request.data.get('is_extendable'),
             max_students=request.data.get('max_students'),
+            hours_per_week=request.data.get('hours_per_week'),
             start_date=request.data.get('start_date'),
-            end_date=request.data.get('end_date')
+            end_date=request.data.get('end_date'),
+
         )
         context['status'] = 'successful'
         return Response(context)
@@ -178,3 +183,44 @@ def change_project_status(request):
         print(e.__str__())
 
     return Response(context)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsFaculty])
+def check_feedback_submitted(request, project_uuid, email):
+    try:
+        feedback = Feedback.objects.get(
+            application__project__uuid_field=project_uuid,
+            application__student__user__email=email
+        )
+        return Response({
+            'status': 'submitted',
+            'feedback': FeedbackSerializer(feedback).data
+        })
+    except:
+        return Response({
+            'status': 'not submitted'
+        })
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsFaculty])
+def submit_feedback(request):
+    try:
+        application = Application.objects.get(
+            project__uuid_field=request.data.get('project_uuid'),
+            student__user__email=request.data.get('email')
+        )
+        Feedback.objects.create(
+            application=application,
+            project_is_complete=request.data.get('project_is_complete'),
+            feedback=request.data.get('feedback')
+        )
+        return Response({
+            'status': 'successful'
+        })
+    except:
+        return Response({
+            'status': 'unsuccessful',
+            'error': 'Wrong email and uuid'
+        })

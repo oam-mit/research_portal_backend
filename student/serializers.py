@@ -10,8 +10,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['uuid_field', 'title', 'description', 'faculty', 'applied',
-                  'tags', 'max_students', 'start_date', 'end_date', 'is_active']
+        fields = ['uuid_field', 'title', 'description', 'outcome', 'faculty', 'applied',
+                  'tags', 'is_extendable', 'max_students', 'hours_per_week', 'start_date', 'end_date', 'is_active']
 
     def get_applied(self, obj):
         applications = Application.objects.filter(

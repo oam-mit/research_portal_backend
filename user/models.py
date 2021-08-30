@@ -70,6 +70,8 @@ class Student(models.Model):
     cv = models.FileField(upload_to=upload_and_rename_cv,
                           null=True, blank=True)
 
+    domains_of_interest = models.CharField(max_length=65000, null=True)
+
     def __str__(self):
         return self.user.email
 
@@ -124,11 +126,14 @@ class Project(models.Model):
     # page 1
     title = models.CharField(max_length=6000)
     description = models.TextField(max_length=65000)
+    outcome = models.CharField(null=True, max_length=2000)
     tags = models.CharField(max_length=65000)
 
     # page2
     is_department_specific = models.BooleanField()
+    is_extendable = models.BooleanField(default=False)
     max_students = models.PositiveBigIntegerField()
+    hours_per_week = models.PositiveIntegerField(null=True)
     start_date = models.DateField()
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
@@ -160,3 +165,13 @@ class Application(models.Model):
 
     class Meta:
         unique_together = ['project', 'student']
+
+
+class Feedback(models.Model):
+    application = models.OneToOneField(
+        to=Application, on_delete=models.CASCADE)
+    project_is_complete = models.BooleanField()
+    feedback = models.CharField(max_length=20000)
+
+    def __str__(self) -> str:
+        return self.feedback

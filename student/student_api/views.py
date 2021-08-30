@@ -136,3 +136,22 @@ def submit_cv(request):
         context['error'] = e.__str__()
         print(context)
         return Response(context)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsStudent])
+def edit_domain_of_interest(request):
+    try:
+        request.user.student.domains_of_interest = request.data.get(
+            'domains_of_interest')
+        request.user.student.save()
+
+        return Response({
+            'status': 'successful'
+        })
+
+    except Exception as e:
+        return Response({
+            'status': 'unsuccessful',
+            'error': e.__str__()
+        })
