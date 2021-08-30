@@ -162,16 +162,18 @@ EMAIL_HOST_PASSWORD = 'tngiynqwsbeopaub'
 DEFAULT_FROM_EMAIL = 'ISTE Manipal Research Portal <istemanipalboard@gmail.com>'
 
 # S3 settings
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_LOCATION = 'static'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 AWS_ACCESS_KEY_ID = 'AKIAYZNATZVOQSDYEQWB'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'iste-research-portal'
-AWS_DEFAULT_ACL = 'public-read'
-# AWS_S3_REGION_NAME = 'US East (Ohio) us-east-2'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+# s3 static settings
+STATIC_LOCATION = 'static'
+STATICFILES_STORAGE = 'research_portal.storage_backends.StaticStorage'
+
+PUBLIC_MEDIA_LOCATION = 'media'
+DEFAULT_FILE_STORAGE = 'research_portal.storage_backends.PublicMediaStorage'
 
 
 # EMAIL_VERIFIED_CALLBACK = make_user_active
