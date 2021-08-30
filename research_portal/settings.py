@@ -151,7 +151,7 @@ MEDIA_ROOT = BASE_DIR/'media'
 # def make_user_active(user):
 #     user.is_active=True
 
-
+# Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'emails'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -160,6 +160,19 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'istemanipalboard@gmail.com'
 EMAIL_HOST_PASSWORD = 'tngiynqwsbeopaub'
 DEFAULT_FROM_EMAIL = 'ISTE Manipal Research Portal <istemanipalboard@gmail.com>'
+
+# S3 settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_LOCATION = 'static'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+AWS_ACCESS_KEY_ID = 'AKIAYZNATZVOQSDYEQWB'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'iste-research-portal'
+AWS_DEFAULT_ACL = 'public-read'
+# AWS_S3_REGION_NAME = 'US East (Ohio) us-east-2'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
 
 # EMAIL_VERIFIED_CALLBACK = make_user_active
 # EMAIL_FROM_ADDRESS = EMAIL_HOST_USER
