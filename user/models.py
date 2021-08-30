@@ -70,7 +70,7 @@ class Student(models.Model):
     cv = models.FileField(upload_to=upload_and_rename_cv,
                           null=True, blank=True)
 
-    domains_of_interest = models.CharField(max_length=65000, null=True)
+    domains_of_interest = models.TextField(max_length=65000, null=True)
 
     def __str__(self):
         return self.user.email
@@ -106,8 +106,8 @@ class Faculty(models.Model):
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=6000, unique=True)
-    department_building = models.CharField(max_length=600)
+    name = models.CharField(max_length=255, unique=True)
+    department_building = models.CharField(max_length=255)
     slug = models.SlugField(max_length=100, blank=True)
 
     def __str__(self):
@@ -124,10 +124,10 @@ class Project(models.Model):
     uuid_field = models.UUIDField(unique=True, default=uuid4, editable=False)
     faculty = models.ForeignKey(to=Faculty, on_delete=models.CASCADE)
     # page 1
-    title = models.CharField(max_length=6000)
+    title = models.CharField(max_length=254)
     description = models.TextField(max_length=65000)
-    outcome = models.CharField(null=True, max_length=2000)
-    tags = models.CharField(max_length=65000)
+    outcome = models.TextField(null=True, max_length=2000)
+    tags = models.TextField(max_length=65000)
 
     # page2
     is_department_specific = models.BooleanField()
@@ -171,7 +171,7 @@ class Feedback(models.Model):
     application = models.OneToOneField(
         to=Application, on_delete=models.CASCADE)
     project_is_complete = models.BooleanField()
-    feedback = models.CharField(max_length=20000)
+    feedback = models.TextField(max_length=20000)
 
     def __str__(self) -> str:
         return self.feedback
