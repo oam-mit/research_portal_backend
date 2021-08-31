@@ -17,7 +17,7 @@ env = environ.Env(
     # set casting, default value
 )
 
-# environ.Env.read_env('.env')
+environ.Env.read_env('.env')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,11 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '60$x1*i6t#3-m#60yc2e4i(r^l5u&gdt#3-qp!)(5wd&*a=c*m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# SECURITY WARNING: keep the secret key used in production secret!
+if DEBUG:
+    SECRET_KEY = '60$x1*i6t#3-m#60yc2e4i(r^l5u&gdt#3-qp!)(5wd&*a=c*m'
+else:
+    SECRET_KEY = env('SECRET_KEY')
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cleanup.apps.CleanupConfig',
+    'storages',
     'rest_framework',
     'verify_email',
     'user.apps.UserConfig',
@@ -152,28 +158,34 @@ MEDIA_ROOT = BASE_DIR/'media'
 #     user.is_active=True
 
 # Email Settings
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'emails'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = BASE_DIR / 'emails'
+else:
+    EMAIL_BACKEND = 'django.core.mail.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
 EMAIL_HOST_USER = 'istemanipalboard@gmail.com'
-EMAIL_HOST_PASSWORD = 'tngiynqwsbeopaub'
 DEFAULT_FROM_EMAIL = 'ISTE Manipal Research Portal <istemanipalboard@gmail.com>'
 
-# S3 settings
-AWS_ACCESS_KEY_ID = 'AKIAYZNATZVOQSDYEQWB'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'iste-research-portal'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
-# s3 static settings
-STATIC_LOCATION = 'static'
-STATICFILES_STORAGE = 'research_portal.storage_backends.StaticStorage'
+if not DEBUG:
+    # S3 settings
+    AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
-PUBLIC_MEDIA_LOCATION = 'media'
-DEFAULT_FILE_STORAGE = 'research_portal.storage_backends.PublicMediaStorage'
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATICFILES_STORAGE = 'research_portal.storage_backends.StaticStorage'
+
+    PUBLIC_MEDIA_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'research_portal.storage_backends.PublicMediaStorage'
 
 
 # EMAIL_VERIFIED_CALLBACK = make_user_active
