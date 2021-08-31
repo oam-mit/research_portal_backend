@@ -1,3 +1,4 @@
 /emails
 /db.sqlite3
-/.env
+.env
+maintenance_mode_state.txt

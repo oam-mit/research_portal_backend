@@ -37,7 +37,7 @@ urlpatterns = [
          name='password_reset_done'),
 
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(template_name='user/password_reset/password_reset_complete.html'),
-         name='password_reset_complete')
+         name='password_reset_complete'),
 ]
 
 if settings.DEBUG:
