@@ -13,5 +13,6 @@ urlpatterns = [
     path('<slug:department_slug>/project/<uuid:uuid_field>',
          views.home, name="project"),
     path('applications', views.home, name="applications"),
+    path('profile', views.home, name="profile"),
 
 ]
