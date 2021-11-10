@@ -59,6 +59,26 @@ class VerifyEmail:
             if self.settings.get('debug_settings'):
                 raise Exception(error)
 
+    def resend_verification_email(self, user, request):
+        useremail = user.email
+        verification_url = self.__make_verification_url(
+            request, user, useremail)
+
+        subject = self.settings.get('subject')
+        msg = render_to_string(
+            'email_verification_msg.html', {"link": verification_url})
+
+        try:
+            send_mail(subject, strip_tags(msg), from_email=self.settings.get('from_alias'),
+                      recipient_list=[useremail], html_message=msg)
+
+        except (BadHeaderError, SMTPException):
+            return False
+
 
 def send_verification_email(request, is_faculty, form):
     return VerifyEmail().send_verification_link(request=request, form=form, is_faculty=is_faculty)
+
+
+def resend_verification_email(request, user):
+    return VerifyEmail().resend_verification_email(user=user, request=request)

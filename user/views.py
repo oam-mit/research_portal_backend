@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout as logout_user, login as login_user, authenticate
+from django.contrib.auth import get_user_model, logout as logout_user, login as login_user, authenticate
 from django.db import transaction
 
 # Rest framework
@@ -13,12 +13,12 @@ from rest_framework.decorators import permission_classes
 
 # My Packages
 from .models import Student, Faculty
-from .forms import CustomUserCreationForm, StudentCreationForm, CustomAuthenticationForm, FacultyRegistrationForm
+from .forms import CustomUserCreationForm, ResendVerificationForm, StudentCreationForm, CustomAuthenticationForm, FacultyRegistrationForm
 from .serializers import UserSerializer
 from research_portal.settings import LOGIN_REDIRECT_URL
 
 # Verification email
-from .email_handler import send_verification_email
+from .email_handler import send_verification_email, resend_verification_email as resend
 
 # Create your views here.
 
@@ -151,3 +151,31 @@ def logout(request):
     logout_user(request)
     messages.success(request, 'You have been logged out successfully')
     return redirect(reverse('user:login'))
+
+
+def resend_verification_email(request):
+    context = {}
+    if request.method == 'POST':
+        form = ResendVerificationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            print(email)
+
+            try:
+
+                user = get_user_model().objects.get(email=email, is_active=False)
+                resend(request, user)
+
+            except Exception as e:
+                print(e.__str__())
+            return redirect(reverse('user:resend_complete'))
+
+    form = ResendVerificationForm()
+
+    context['form'] = form
+
+    return render(request, 'user/verification_email/resend_verification.html', context=context)
+
+
+def resend_verification_complete(request):
+    return render(request, 'user/verification_email/successfully_sent.html')

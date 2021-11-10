@@ -1,0 +1,23 @@
+{%extends 'user/password_reset/password_reset_base.html'%} {%block content%}
+<h3 class="card-title text-center">Resend Verification Email</h3>
+
+<div class="card-text">
+	<form method="POST">
+		{%csrf_token%}
+		<div class="form-group">
+			<label for="exampleInputEmail1"
+				>Enter your email address and we will send you a link </label
+			>
+			{{form}}
+		</div>
+
+		<button type="submit" class="btn btn-primary btn-block py-2">
+			Send password reset email
+		</button>
+	</form>
+</div>
+{%endblock%}
+
+{%block title%}
+Resend Link
+{%endblock%}

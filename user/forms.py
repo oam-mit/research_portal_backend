@@ -93,3 +93,10 @@ class FacultyRegistrationForm(forms.ModelForm):
     class Meta:
         model = Faculty
         fields = ['designation']
+
+
+class ResendVerificationForm(forms.Form):
+    email = forms.EmailField()
+
+    class Meta:
+        fields = ['email']

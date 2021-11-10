@@ -19,5 +19,10 @@ urlpatterns = [
     path('student/register', views.register_student, name='student_register'),
     path('faculty/register', views.register_faculty, name="faculty_register"),
 
+    path('resend_verification_email', views.resend_verification_email,
+         name="resend_verification_email"),
+    path('resend_verification_email/complete',
+         views.resend_verification_complete, name="resend_complete"),
+
 
 ]
