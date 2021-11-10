@@ -18,19 +18,20 @@ class VerifyEmail:
 
     def __make_verification_url(self, request, inactive_user, useremail):
         token = self.__get_hashed_token(inactive_user)
-        email_enc = urlsafe_b64encode(str(useremail).encode('utf-8')).decode('utf-8')
+        email_enc = urlsafe_b64encode(
+            str(useremail).encode('utf-8')).decode('utf-8')
         link = f"/verification/user/verify-email/{email_enc}/{token}/"
-        
+
         absolute_link = request.build_absolute_uri(link)
-        
+
         return absolute_link
 
-   
-    def send_verification_link(self,is_faculty ,request, form):
+    def send_verification_link(self, is_faculty, request, form):
         inactive_user = form.save(is_faculty=is_faculty)
-        
+
         try:
-            useremail = form.cleaned_data.get(self.settings.get('email_field_name'))
+            useremail = form.cleaned_data.get(
+                self.settings.get('email_field_name'))
             if not useremail:
                 raise KeyError(
                     'No key named "email" in your form. Your field should be named as email in form OR set a variable'
@@ -38,10 +39,11 @@ class VerifyEmail:
                     'as email field.'
                 )
 
-            verification_url = self.__make_verification_url(request, inactive_user, useremail)
+            verification_url = self.__make_verification_url(
+                request, inactive_user, useremail)
             subject = self.settings.get('subject')
-            msg = render_to_string(self.settings.get('html_message_template', raise_exception=True),
-                                   {"link": verification_url})
+            msg = render_to_string(
+                'email_verification_msg.html', {"link": verification_url})
 
             try:
                 send_mail(subject, strip_tags(msg), from_email=self.settings.get('from_alias'),
@@ -57,5 +59,6 @@ class VerifyEmail:
             if self.settings.get('debug_settings'):
                 raise Exception(error)
 
-def send_verification_email(request, is_faculty,form):
-    return VerifyEmail().send_verification_link(request=request,form=form,is_faculty=is_faculty)
+
+def send_verification_email(request, is_faculty, form):
+    return VerifyEmail().send_verification_link(request=request, form=form, is_faculty=is_faculty)

@@ -161,7 +161,7 @@ MEDIA_ROOT = BASE_DIR/'media'
 #     user.is_active=True
 
 # Email Settings
-if DEBUG:
+if not DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = BASE_DIR / 'emails'
 else:
@@ -172,7 +172,7 @@ else:
     EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 EMAIL_HOST_USER = 'istemanipalboard@gmail.com'
-DEFAULT_FROM_EMAIL = 'ISTE Manipal Research Portal <istemanipalboard@gmail.com>'
+DEFAULT_FROM_EMAIL = 'ISTE Manipal <istemanipalboard@gmail.com>'
 
 
 if not DEBUG:
