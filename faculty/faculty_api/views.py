@@ -52,8 +52,11 @@ def get_applicants(request, project_uuid):
         applicants = get_user_model().objects.filter(
             student__application__project__uuid_field=project_uuid,
             student__application__project__faculty=request.user.faculty,
-            student__application__status=APPPLIED
+
         )
+        count_accepted = applicants.filter(
+            student__application__status=ACCEPTED).count()
+        applicants = applicants.filter(student__application__status=APPPLIED)
         project = Project.objects.get(uuid_field=project_uuid)
 
         serializer = UserSerializer(applicants, many=True)
@@ -61,6 +64,8 @@ def get_applicants(request, project_uuid):
         context['status'] = 'successful'
         context['title'] = project.title
         context['is_active'] = project.is_active
+        context['count_accepted'] = count_accepted
+        context['count_max'] = project.max_students
 
         context['applications'] = serializer.data
 

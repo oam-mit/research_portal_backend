@@ -161,7 +161,7 @@ MEDIA_ROOT = BASE_DIR/'media'
 #     user.is_active=True
 
 # Email Settings
-if not DEBUG:
+if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = BASE_DIR / 'emails'
 else:

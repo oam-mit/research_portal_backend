@@ -31,7 +31,7 @@ class AppliedProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ['uuid_field', 'title', 'start_date',
-                  'end_date', 'faculty', 'department_slug']
+                  'end_date', 'faculty', 'department_slug', 'outcome', 'description']
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
