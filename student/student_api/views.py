@@ -39,14 +39,12 @@ def get_projects(request, department_slug):
     except:
         context['status'] = 'slug does not exist'
         return Response(context)
-    submitted_applications = Application.objects.filter(
-        student=request.user.student)
     projects = Project.objects.filter(
         faculty__user__department__slug=department_slug)
 
     if department_slug != request.user.department.slug:
         projects = projects.exclude(is_department_specific=True)
-
+    projects = projects.order_by('-is_active')
     serializer = ProjectSerializer(
         projects, many=True, context={'user': request.user})
     context['status'] = 'ok'
