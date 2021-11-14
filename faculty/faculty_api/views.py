@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from faculty.serializers import UserApplicationSerializer
 
 from user.models import Project, Application, Feedback
 from user.serializers import FeedbackSerializer, UserSerializer
@@ -49,17 +50,13 @@ def get_active_projects(request):
 def get_applicants(request, project_uuid):
     context = {}
     try:
-        applicants = get_user_model().objects.filter(
-            student__application__project__uuid_field=project_uuid,
-            student__application__project__faculty=request.user.faculty,
-
-        )
-        count_accepted = applicants.filter(
-            student__application__status=ACCEPTED).count()
-        applicants = applicants.filter(student__application__status=APPPLIED)
+        applicants = Application.objects.filter(
+            project__faculty=request.user.faculty, project__uuid_field=project_uuid)
+        count_accepted = applicants.filter(status=ACCEPTED).count()
+        applicants = applicants.filter(status=APPPLIED)
         project = Project.objects.get(uuid_field=project_uuid)
-
-        serializer = UserSerializer(applicants, many=True)
+        print(applicants)
+        serializer = UserApplicationSerializer(applicants, many=True)
 
         context['status'] = 'successful'
         context['title'] = project.title
@@ -69,7 +66,8 @@ def get_applicants(request, project_uuid):
 
         context['applications'] = serializer.data
 
-    except:
+    except Exception as e:
+        print(e.__str__())
         context['status'] = 'unsuccessful'
 
     return Response(context)
@@ -80,14 +78,12 @@ def get_applicants(request, project_uuid):
 def get_accepted_applicants(request, project_uuid):
     context = {}
     try:
-        applicants = get_user_model().objects.filter(
-            student__application__project__uuid_field=project_uuid,
-            student__application__project__faculty=request.user.faculty,
-            student__application__status=ACCEPTED
-        )
+        applicants = Application.objects.filter(
+            project__faculty=request.user.faculty, project__uuid_field=project_uuid, status=ACCEPTED)
+
         project = Project.objects.get(uuid_field=project_uuid)
 
-        serializer = UserSerializer(applicants, many=True)
+        serializer = UserApplicationSerializer(applicants, many=True)
 
         context['status'] = 'successful'
         context['title'] = project.title
