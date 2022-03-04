@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+
+
 from . import settings
 from django.contrib.auth import views as auth_views
 
@@ -25,6 +27,7 @@ urlpatterns = [
     path('', include('user.urls')),
     path('student/', include('student.urls')),
     path('faculty/', include('faculty.urls')),
+    path('project_management/', include('project_management.urls')),
 
     # Password Reset Views
     path('password_reset', auth_views.PasswordResetView.as_view(

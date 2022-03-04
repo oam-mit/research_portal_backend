@@ -1,4 +1,6 @@
 /emails
-/db.sqlite3
 .env
 maintenance_mode_state.txt
+env/
+**/.vscode/
+db.sqlite3

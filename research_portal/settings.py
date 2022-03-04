@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'student.student_api',
     'faculty.apps.FacultyConfig',
     'faculty.faculty_api',
+    'project_management.apps.ProjectManagementConfig',
+    'project_management.project_management_api',
 ]
 
 MIDDLEWARE = [
