@@ -7,9 +7,15 @@ urlpatterns = [
     path('get_meetings/<uuid:project_uuid>/',
          views.get_meetings, name='get_meetings'),
 
+    path('get_meetings/student/<uuid:project_uuid>/',
+         views.get_meetings_student, name='get_meeting_students'),
+
     path('create_meeting/', views.create_meeting, name='create_meeting'),
 
     path('get_tasks/<uuid:project_uuid>/', views.get_tasks, name="get_tasks"),
+
+    path('get_tasks/student/<uuid:project_uuid>/',
+         views.get_tasks_student, name="get_tasks"),
 
     path('change_task_status/', views.change_task_status,
          name="change_task_status"),

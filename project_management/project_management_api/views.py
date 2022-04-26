@@ -8,7 +8,7 @@ from project_management.project_management_api.utils import GoogleMananger
 from user.models import ACCEPTED, Application, Project, Student
 
 
-from user.permissions import IsFaculty
+from user.permissions import IsFaculty, IsStudent
 
 
 from project_management.models import Meeting, Task
@@ -26,6 +26,20 @@ def get_meetings(request, project_uuid):
     application_serializer = UserApplicationSerializer(
         accepted_applicants, many=True)
     context['accepted_applications'] = application_serializer.data
+
+    meetings = Meeting.objects.filter(
+        project__uuid_field=project_uuid).order_by('-date_time')
+
+    serializer = MeetingSerializer(meetings, many=True)
+
+    context['meetings'] = serializer.data
+    return Response(context)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_meetings_student(request, project_uuid):
+    context = {}
 
     meetings = Meeting.objects.filter(
         project__uuid_field=project_uuid).order_by('-date_time')
@@ -89,6 +103,23 @@ def get_tasks(request, project_uuid):
             'status': 'successful',
             'tasks': serializer.data,
             'accepted_applications': application_serializer.data
+        })
+
+    except Exception as e:
+        return Response({'status': 'unsuccessful', 'error': e.__str__()})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsStudent])
+def get_tasks_student(request, project_uuid):
+    try:
+        tasks = Task.objects.filter(
+            project__uuid_field=project_uuid).order_by('-pk')
+        serializer = TaskSerializer(tasks, many=True)
+
+        return Response({
+            'status': 'successful',
+            'tasks': serializer.data,
         })
 
     except Exception as e:
