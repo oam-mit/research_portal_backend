@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from project_management.models import Meeting
+from project_management.models import Meeting, Task
 
 # Register your models here.
 
@@ -10,3 +10,5 @@ class MeetingAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Meeting, MeetingAdmin)
+
+admin.site.register(Task)

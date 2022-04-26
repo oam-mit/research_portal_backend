@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from user.serializers import DepartmentSerializer
-from user.models import Department, Project, Application
+from user.models import ACCEPTED, Department, Project, Application
 from user.permissions import IsStudent
 
 from ..serializers import ProjectSerializer, AppliedProjectSerializer, ApplicationSerializer
@@ -40,11 +40,11 @@ def get_projects(request, department_slug):
         context['status'] = 'slug does not exist'
         return Response(context)
     projects = Project.objects.filter(
-        faculty__user__department__slug=department_slug)
+        faculty__user__department__slug=department_slug).order_by('-is_active', '-start_date')
 
     if department_slug != request.user.department.slug:
         projects = projects.exclude(is_department_specific=True)
-    projects = projects.order_by('-is_active')
+
     serializer = ProjectSerializer(
         projects, many=True, context={'user': request.user})
     context['status'] = 'ok'
@@ -153,3 +153,22 @@ def edit_domain_of_interest(request):
             'status': 'unsuccessful',
             'error': e.__str__()
         })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsStudent])
+def get_working_on_projects(request):
+    try:
+        projects = Project.objects.filter(
+            application__in=Application.objects.filter(
+                student=request.user.student, status=ACCEPTED)
+        )
+
+        print(projects)
+
+        serializer = AppliedProjectSerializer(projects, many=True)
+        return Response({'status': 'successful', 'projects': serializer.data})
+
+    except Exception as e:
+        print(e)
+        return Response({'status': 'unsuccessful', 'error': e.__str__()})

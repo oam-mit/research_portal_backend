@@ -3,15 +3,15 @@ from rest_framework.response import Response
 from rest_framework.decorators import authentication_classes, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from faculty.serializers import UserApplicationSerializer
-from project_management.project_management_api.serializers import MeetingSerializer
+from project_management.project_management_api.serializers import MeetingSerializer, TaskSerializer
 from project_management.project_management_api.utils import GoogleMananger
-from user.models import ACCEPTED, Application, Project
+from user.models import ACCEPTED, Application, Project, Student
 
 
 from user.permissions import IsFaculty
 
 
-from project_management.models import Meeting
+from project_management.models import Meeting, Task
 # Create your views here.
 
 
@@ -69,3 +69,60 @@ def create_meeting(request):
         context['status'] = 'unsuccessful'
         context['error'] = e.__str__()
         return Response(context)
+
+
+@api_view(['GET'])
+@permission_classes([IsFaculty])
+def get_tasks(request, project_uuid):
+    try:
+        tasks = Task.objects.filter(
+            project__uuid_field=project_uuid).order_by('-pk')
+        serializer = TaskSerializer(tasks, many=True)
+
+        accepted_applicants = Application.objects.filter(
+            project__faculty=request.user.faculty, project__uuid_field=project_uuid, status=ACCEPTED)
+
+        application_serializer = UserApplicationSerializer(
+            accepted_applicants, many=True)
+
+        return Response({
+            'status': 'successful',
+            'tasks': serializer.data,
+            'accepted_applications': application_serializer.data
+        })
+
+    except Exception as e:
+        return Response({'status': 'unsuccessful', 'error': e.__str__()})
+
+
+@api_view(['POST'])
+@permission_classes([IsFaculty])
+def change_task_status(request):
+    try:
+        print(request.data.get('pk'))
+        task = Task.objects.get(pk=request.data.get('pk'))
+        task.status = request.data.get('status')
+        task.save()
+
+        return Response({'status': 'successful'})
+
+    except Exception as e:
+        return Response({'status': 'unsuccessful', 'error': e.__str__()})
+
+
+@api_view(['POST'])
+@permission_classes([IsFaculty])
+def create_task(request):
+    try:
+        project = Project.objects.get(
+            uuid_field=request.data.get('project_uuid'))
+        student = Student.objects.get(
+            user__email=request.data.get('student_email'))
+        task = Task.objects.create(description=request.data.get(
+            'description'), project=project, student=student)
+
+        serializer = TaskSerializer(task)
+        return Response({'status': 'successful', 'task': serializer.data})
+
+    except Exception as e:
+        return Response({'status': 'unsuccessful', 'error': e.__str__()})

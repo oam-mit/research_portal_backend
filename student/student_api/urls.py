@@ -15,4 +15,6 @@ urlpatterns = [
     path('submit_cv/', views.submit_cv, name="api_submit_cv"),
     path('change_domains_of_interest/', views.edit_domain_of_interest,
          name="change_domains_of_interest"),
+    path('get_working_on_projects/', views.get_working_on_projects,
+         name="get_working_on_projects"),
 ]

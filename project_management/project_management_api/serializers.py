@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from project_management.models import Meeting
-from user.serializers import StudentSerializer
+from project_management.models import Meeting, Task
+from user.serializers import StudentSerializer, UserSerializer
 
 
 class MeetingSerializer(serializers.ModelSerializer):
@@ -11,3 +11,11 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         fields = ['link', 'students', 'description', 'date_time']
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    student = UserSerializer(source='student.user')
+
+    class Meta:
+        model = Task
+        fields = ['student', 'status', 'description', 'pk']

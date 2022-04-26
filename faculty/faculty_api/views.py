@@ -30,9 +30,9 @@ def get_active_projects(request):
     context = {}
 
     active_projects = Project.objects.filter(
-        is_active=True, faculty=request.user.faculty)
+        is_active=True, faculty=request.user.faculty).order_by('-start_date')
     past_projects = Project.objects.filter(
-        is_active=False, faculty=request.user.faculty)
+        is_active=False, faculty=request.user.faculty).order_by('-start_date')
 
     active_project_serializer = AppliedProjectSerializer(
         active_projects, many=True)
