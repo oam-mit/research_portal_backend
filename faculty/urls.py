@@ -14,4 +14,7 @@ urlpatterns = [
          views.home, name="accepted_applications"),
     path('profile', views.home, name="profile"),
     path('project/add', views.home, name="add_project"),
+    path('project_management/meetings/<uuid:project_uuid>',
+         views.home, name="meeting"),
+    path('project_management/tasks/<uuid:project_uuid>', views.home, name="tasks"),
 ]

@@ -1,0 +1,9 @@
+{% load tz %}
+{%timezone "Asia/Kolkata"%}
+Dear Student,<br/>
+This is to inform you that a meeting has been scheduled on {{date_time}} for the project {{project_title}}. <br/>
+Meeting Link: <a rel="noreferrer noopener" target="__blank"  href="{{meeting_link}}"> {{meeting_link}} </a>
+<br/>
+You may visit <a rel="noreferrer noopener" target="__blank" href="{{domain}}/student/working_on">{{domain}}/student/working_on</a> to get a list of tasks and meetings for your projects. <br/><br/>
+All the best!
+{%endtimezone%}

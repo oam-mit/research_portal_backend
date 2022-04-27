@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.utils.dateparse import parse_datetime
+
 from rest_framework.response import Response
 from rest_framework.decorators import authentication_classes, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -53,6 +55,7 @@ def get_meetings_student(request, project_uuid):
 @api_view(['POST'])
 def create_meeting(request):
     context = {}
+
     google_manager = GoogleMananger(
         access_token=request.data.get('access_token'))
 
@@ -60,26 +63,36 @@ def create_meeting(request):
         project = Project.objects.get(
             uuid_field=request.data.get('uuid_field'))
 
-        link = google_manager.create_meeting_link(
+        link, event_id = google_manager.create_meeting_link(
             f'{project.faculty.designation}.{project.faculty.user.first_name} {project.faculty.user.last_name}',
             request.data.get('description'),
             request.data.get('start_date'),
             request.data.get('end_date'),
             project.title
         )
+        try:
 
-        meeting = Meeting.objects.create(
-            link=link,
-            project=project,
-            date_time=request.data.get('start_date'),
-            description=request.data.get('description')
-        )
+            meeting = Meeting.objects.create(
+                link=link,
+                project=project,
+                date_time=parse_datetime(request.data.get('start_date')),
+                description=request.data.get('description')
+            )
+        except Exception as e:
+            google_manager.delete_event(event_id=event_id)
+            return Response({'status': 'unsuccessful', 'error': e.__str__()})
+
         serializer = MeetingSerializer(meeting)
         context['status'] = 'successful'
         context['meeting'] = serializer.data
 
+        google_manager.send_meeting_email(
+            [student['value'] for student in request.data.get('students')], meeting, request)
+
         return Response(context)
     except Exception as e:
+        if event_id:
+            google_manager.delete_event(event_id)
         context['status'] = 'unsuccessful'
         context['error'] = e.__str__()
         return Response(context)
